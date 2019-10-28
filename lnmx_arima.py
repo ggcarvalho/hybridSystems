@@ -19,6 +19,11 @@ rcParams['figure.figsize'] =15, 6
 import seaborn as sns
 sns.set()
 
+##############################################################################
+
+def incrementar_serie(serie_real, serie_diff):
+    return serie_real[0:-1] + serie_diff
+
 ##########################  PLOTS  ############################################
 lnmx = pd.read_csv("lnmx_series.csv",index_col="Year")
 lnmx = lnmx["40"]
@@ -43,7 +48,7 @@ Train, Test = lnmx[lnmx.index<=split] ,lnmx[lnmx.index>split] # Train and Test s
 lnmx_diff = lnmx.diff().dropna()
 plt.plot(lnmx_diff,c="k",linewidth=1)
 plt.xlabel("Time (Years)")
-plt.ylabel(" LNMX Differentiated ")
+plt.title(" LNMX Differentiated ")
 plt.show()
 
 # # # ACF plot
@@ -96,16 +101,21 @@ fc, se, conf = fitted.forecast(len(Test), alpha=0.05)  # 95% conf
 fc_series = pd.Series(fc, index=Test.index)
 arima_fittedValues = fitted.fittedvalues
 # Plot
-fitted.plot_predict(dynamic=False,start=1,end=len(Train)+len(Test))
-plt.plot(Test,label="Test",color="k")
-plt.plot(fc_series, label='Forecast',color="green")
-#plt.title('Forecast vs Actuals')
-#plt.legend(loc='upper left', fontsize=8)
-plt.title("ARIMA")
-L=plt.legend(loc='best')
-L.get_texts()[0].set_text('ARIMA Fit')
-L.get_texts()[1].set_text('Train')
+fitted.plot_predict(dynamic=False,start=1,end=len(Train))
+plt.title("ARIMA(1,1,1) -- Train")
+plt.legend(['ARIMA fit', 'Train' ])
 plt.show()
+
+
+plt.plot(Test,label="Test",color="orange")
+plt.plot(fc_series, label='Forecast',color="blue")
+plt.title("ARIMA(1,1,1) -- Test")
+L=plt.legend(loc='best')
+L.get_texts()[0].set_text('Test')
+L.get_texts()[1].set_text('Forecast')
+plt.show()
+
+
 # MSE
 mse_arima_train = mean_squared_error(lnmx_diff[lnmx_diff.index<=split], arima_fittedValues)
 print("MSE ARIMA Train (diff. serie)= ", mse_arima_train)
@@ -125,7 +135,3 @@ plt.show()
 residuals.plot(kind='kde')
 plt.show()
 #print(residuals.describe())
-
-
-
-
