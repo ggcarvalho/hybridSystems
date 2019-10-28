@@ -1,10 +1,3 @@
-"""
-
-Bitcoin Time Series Analysis
-Author : Gabriel G. Carvalho
-Time Series Analysis and Forecast @CInUFPE
-
-"""
 
 ######################################## IMPORTING ############################
 import matplotlib.pyplot as plt
@@ -40,7 +33,10 @@ plt.show()
 split= 1990
 
 Train, Test = lnmx[lnmx.index<=split] ,lnmx[lnmx.index>split] # Train and Test series
-
+plt.plot(Train,color="darkblue",linewidth=1,label="Train")
+plt.plot(Test,color="coral",linewidth=1,label="Test")
+plt.legend()
+plt.show()
 # print(len(lnmx))
 # print(len(Train))
 # print(len(Test))
@@ -108,8 +104,8 @@ plt.legend(['ARIMA fit', 'Train' ])
 plt.show()
 
 
-plt.plot(Test,label="Test",color="coral")
-plt.plot(fc_series, label='Forecast',color="darkblue")
+plt.plot(Test,label="Test",color="coral",linewidth=1)
+plt.plot(fc_series, label='Forecast',color="blue",linewidth=1)
 plt.title("ARIMA(1,1,1) -- Test")
 L=plt.legend(loc='best')
 L.get_texts()[0].set_text('Test')
@@ -125,7 +121,7 @@ print("MSE ARIMA Test= ", mse_arima)
 #print(fitted.summary())
 #plot residual errors
 residuals = pd.DataFrame(fitted.resid)
-plt.plot(residuals)
+plt.plot(residuals,color='k',linewidth=1)
 plt.title("ARIMA(1,1,1) residuals")
 plt.show()
 plot_acf(residuals,color="k",lags=30)

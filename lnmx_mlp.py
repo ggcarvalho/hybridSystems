@@ -11,7 +11,7 @@ import seaborn as sns
 sns.set()
 rcParams['figure.figsize'] =15, 6
 
-############################################################################################
+#####################################################################################################
 
 lnmx = pd.read_csv("lnmx_series.csv",index_col="Year")
 lnmx = lnmx["40"]
@@ -120,12 +120,12 @@ def split_serie_with_lags(serie, perc_train, perc_val = 0):
 tam_janela = 2
 serie_janelas = gerar_janelas(tam_janela, serie)
 x_train, y_train, x_test, y_test, x_val, y_val = split_serie_with_lags(serie_janelas, 0.6,
- perc_val = 0.29)
+ perc_val = 0.297435897)
 
 def treinar_mlp(x_train, y_train, x_val, y_val,num_exec):
 
 
-    neuronios =  [1, 2,3,5,10]  #[1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 150, 170, 200]
+    neuronios =  [1,2,3,5,10]  #[1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 150, 170, 200]
     func_activation =  ['tanh','relu']#['tanh']   #['identity', 'tanh', 'relu']
     alg_treinamento = ['lbfgs','adam','sgd']#, 'sgd', 'adam']
     max_iteracoes = [10000] #[100, 1000, 10000]
