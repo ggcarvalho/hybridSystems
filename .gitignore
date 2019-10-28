@@ -1,0 +1,6 @@
+#ignore pictures
+*.png
+*.jpg
+
+#Ignore IPythonNotebook checkpoints
+*.ipynb_checkpoints
