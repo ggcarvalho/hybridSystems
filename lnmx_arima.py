@@ -14,19 +14,16 @@ from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 from statsmodels.tsa.arima_model import ARIMA
 from sklearn.metrics import mean_squared_error
 import pmdarima as pm
+from matplotlib.pylab import rcParams
+rcParams['figure.figsize'] =15, 6
 import seaborn as sns
 sns.set()
-######################### FUNCTIONS ###########################################
-def returns(serie):
-	returns = []
-	serie=serie.values
-	for i in range(len(serie) -1):
-		returns.append(serie[i+1] - serie[i])
-	return pd.DataFrame(returns,columns=None)
-##########################  PLOTS  ############################################
-lnmx = pd.read_csv("lnmx_series.csv")
 
+##########################  PLOTS  ############################################
+lnmx = pd.read_csv("lnmx_series.csv",index_col="Year")
 lnmx = lnmx["40"]
+lnmx = lnmx[lnmx.index<2011]
+
 plt.plot(lnmx,linewidth=1,color="k")
 plt.xlabel("Time (Years)")
 plt.ylabel("Mortality Rate")
@@ -34,39 +31,42 @@ plt.title("LNMX Series")
 plt.show()
 
 
+split= 1990
 
-Train, Test = lnmx[:175] ,lnmx[175:195] # Train and Test series
+Train, Test = lnmx[lnmx.index<=split] ,lnmx[lnmx.index>split] # Train and Test series
+
 # print(len(lnmx))
 # print(len(Train))
 # print(len(Test))
 # print(  len(lnmx) - len(Train) - len(Test)    )
-lnmx_returns = np.diff(lnmx)
 
-
-plt.plot(lnmx_returns,c="k",linewidth=1)
+lnmx_diff = lnmx.diff().dropna()
+plt.plot(lnmx_diff,c="k",linewidth=1)
 plt.xlabel("Time (Years)")
-plt.ylabel(" LNMX differentiate ")
+plt.ylabel(" LNMX Differentiated ")
 plt.show()
 
-# # ACF plot
-# plot_acf(lnmx, lags=20, c="k")
-# plt.show()
+# # # ACF plot
+# # plot_acf(lnmx, lags=20, c="k")
+# # plt.show()
 
-# # PACF plot
-# plot_pacf(lnmx, lags=20, c= "k")
-# plt.show()
+# # # PACF plot
+# # plot_pacf(lnmx, lags=20, c= "k")
+# # plt.show()
 
 # ACF plot
-plot_acf(lnmx_returns, lags=30, c="k")
-plt.title("ACF (Returns)")
+plot_acf(lnmx_diff, lags=30, c="k")
+plt.title("ACF (diff)")
 plt.show()
 
 # PACF plot
-plot_pacf(lnmx_returns, lags=30, c= "k")
-plt.title("PACF (Returns)")
+plot_pacf(lnmx_diff, lags=30, c= "k")
+plt.title("PACF (diff)")
 plt.show()
 
-# # model = pm.auto_arima(lnmx, start_p=0, start_q=0,
+
+
+# # model = pm.auto_arima(Train, start_p=0, start_q=0,
 # #                       test='adf',       # use adftest to find optimal 'd'
 # #                       max_p=10, max_q=10, # maximum p and q
 # #                       m=1,              # frequency of series
@@ -107,13 +107,11 @@ L.get_texts()[0].set_text('ARIMA Fit')
 L.get_texts()[1].set_text('Train')
 plt.show()
 # MSE
-mse_arima_train = mean_squared_error(lnmx_returns[1:175], arima_fittedValues)
-print("MSE ARIMA Train (on returns)= ", mse_arima_train)
+mse_arima_train = mean_squared_error(lnmx_diff[lnmx_diff.index<=split], arima_fittedValues)
+print("MSE ARIMA Train (diff. serie)= ", mse_arima_train)
 mse_arima = mean_squared_error(Test, fc_series)
 print("MSE ARIMA Test= ", mse_arima)
-
-
-print(fitted.summary())
+#print(fitted.summary())
 #plot residual errors
 residuals = pd.DataFrame(fitted.resid)
 plt.plot(residuals)

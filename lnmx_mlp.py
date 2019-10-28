@@ -6,12 +6,16 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.metrics import mean_squared_error as MSE
 import statsmodels.api as sm
 from matplotlib.pylab import rcParams
+import pandas as pd
+import seaborn as sns
+sns.set()
 rcParams['figure.figsize'] =15, 6
 
 ############################# PLOTING ###############################################################
 
-lnmx = pd.read_csv("lnmx_series.csv")
-dados = lnmx["40"]
+lnmx = pd.read_csv("lnmx_series.csv",index_col="Year")
+lnmx = lnmx["40"]
+dados = lnmx[lnmx.index<2011]
 
 plt.plot(dados)
 plt.show()
@@ -106,7 +110,7 @@ def select_lag_acf(serie, max_lag):
 
     print('LAGS', lags_selecionados)
 
-    #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     #inverte o valor dos lags para usar na lista de dados se os dados forem de ordem [t t+1 t+2 t+3]
     lags_selecionados = [max_lag - (i+1) for i in lags_selecionados]
     #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -179,7 +183,8 @@ def treinar_mlp(x_train, y_train, x_val, y_val,num_exec):
             for l in range(0,len(alg_treinamento)):
                 for m in range(0,len(max_iteracoes)):
                     for n in range(0,len(learning_rate)):
-                        for qtd_lag in range(1, len(x_train[0])+1): #variar a qtd de pontos utilizados na janela
+                        for qtd_lag in range(1, len(x_train[0])+1):
+                        #variar a qtd de pontos utilizados na janela
 
                             print('QTD de Lags:', qtd_lag, 'Qtd de Neuronios' ,neuronios[i],
                              'Func. Act', func_activation[j])
@@ -207,7 +212,7 @@ def treinar_mlp(x_train, y_train, x_val, y_val,num_exec):
 
 
 
-modelo, lag_sel = treinar_mlp(x_train, y_train, x_val, y_val,5)
+modelo, lag_sel = treinar_mlp(x_train, y_train, x_val, y_val,10)
 
 predict_train = modelo.predict(x_train[:, -lag_sel:])
 predict_val = modelo.predict(x_val[:, -lag_sel:])
