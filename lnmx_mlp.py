@@ -1,6 +1,5 @@
 
-################################### IMPORTING ##################################################################
-import pandas as pd
+################################### IMPORTING #######################################################
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.neural_network import MLPRegressor
@@ -9,14 +8,14 @@ import statsmodels.api as sm
 from matplotlib.pylab import rcParams
 rcParams['figure.figsize'] =15, 6
 
-############################# PLOTING ##########################################################################
+############################# PLOTING ###############################################################
 
 lnmx = pd.read_csv("lnmx_series.csv")
 dados = lnmx["40"]
 
 plt.plot(dados)
 plt.show()
-###################### FUNCTIONS #################################################################################
+###################### FUNCTIONS ###################################################################
 
 def normalizar_serie(serie):
     minimo = min(serie)
@@ -35,7 +34,7 @@ def desnormalizar(serie_atual, serie_real):
 
 serie = dados.values
 serie_normalizada = normalizar_serie(serie)
-###################### NORMALIZED PLOT #######################################################################
+###################### NORMALIZED PLOT #############################################################
 plt.plot(serie_normalizada)
 plt.show()
 
@@ -97,7 +96,8 @@ def select_lag_acf(serie, max_lag):
         if acf_x[i] >= limiar_superior[i] or acf_x[i] <= limiar_inferior[i]:
             lags_selecionados.append(i-1)  #-1 por conta que o lag 1 em python é o 0
 
-    #caso nenhum lag seja selecionado, essa atividade de seleção para o gridsearch encontrar a melhor combinação de lags
+    #caso nenhum lag seja selecionado, essa atividade de seleção
+    # para o gridsearch encontrar a melhor combinação de lags
     if len(lags_selecionados)==0:
 
 
@@ -161,12 +161,13 @@ def split_serie_with_lags(serie, perc_train, perc_val = 0):
         return x_train, y_train, x_test, y_test
 tam_janela = 2
 serie_janelas = gerar_janelas(tam_janela, serie_normalizada)
-x_train, y_train, x_test, y_test, x_val, y_val = split_serie_with_lags(serie_janelas, 0.6, perc_val = 0.2)
+x_train, y_train, x_test, y_test, x_val, y_val = split_serie_with_lags(serie_janelas, 0.6,
+ perc_val = 0.2)
 
 def treinar_mlp(x_train, y_train, x_val, y_val,num_exec):
 
 
-    neuronios =  [1, 2,3,5,10]    #[1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 150, 170, 200]
+    neuronios =  [1, 2,3,5,10]  #[1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 150, 170, 200]
     func_activation =  ['tanh','relu']#['tanh']   #['identity', 'tanh', 'relu']
     alg_treinamento = ['lbfgs','adam','sgd']#, 'sgd', 'adam']
     max_iteracoes = [10000] #[100, 1000, 10000]
@@ -180,11 +181,14 @@ def treinar_mlp(x_train, y_train, x_val, y_val,num_exec):
                     for n in range(0,len(learning_rate)):
                         for qtd_lag in range(1, len(x_train[0])+1): #variar a qtd de pontos utilizados na janela
 
-                            print('QTD de Lags:', qtd_lag, 'Qtd de Neuronios' ,neuronios[i], 'Func. Act', func_activation[j])
+                            print('QTD de Lags:', qtd_lag, 'Qtd de Neuronios' ,neuronios[i],
+                             'Func. Act', func_activation[j])
 
 
                             for e in range(0,num_exec):
-                                mlp = MLPRegressor(hidden_layer_sizes=neuronios[i], activation=func_activation[j], solver=alg_treinamento[l], max_iter = max_iteracoes[m], learning_rate= learning_rate[n])
+                                mlp = MLPRegressor(hidden_layer_sizes=neuronios[i],
+                                 activation=func_activation[j], solver=alg_treinamento[l],
+                                  max_iter = max_iteracoes[m], learning_rate= learning_rate[n])
 
 
                                 mlp.fit(x_train[:,-qtd_lag:], y_train)
