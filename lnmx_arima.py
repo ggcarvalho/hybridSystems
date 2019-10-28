@@ -11,12 +11,6 @@ from matplotlib.pylab import rcParams
 rcParams['figure.figsize'] =15, 6
 import seaborn as sns
 sns.set()
-
-##############################################################################
-
-def incrementar_serie(serie_real, serie_diff):
-    return serie_real[0:-1] + serie_diff
-
 ##########################  PLOTS  ############################################
 lnmx = pd.read_csv("lnmx_series.csv",index_col="Year")
 lnmx = lnmx["40"]
@@ -28,8 +22,6 @@ plt.ylabel("Mortality Rate")
 plt.title("LNMX Series")
 plt.show()
 
-
-
 split= 1990
 
 Train, Test = lnmx[lnmx.index<=split] ,lnmx[lnmx.index>split] # Train and Test series
@@ -37,6 +29,7 @@ plt.plot(Train,color="darkblue",linewidth=1,label="Train")
 plt.plot(Test,color="coral",linewidth=1,label="Test")
 plt.legend()
 plt.show()
+
 # print(len(lnmx))
 # print(len(Train))
 # print(len(Test))
@@ -67,7 +60,7 @@ plt.title("PACF (diff)")
 plt.show()
 
 
-
+############################################ AUTO ARIMA ###########################################
 # # model = pm.auto_arima(Train, start_p=0, start_q=0,
 # #                       test='adf',       # use adftest to find optimal 'd'
 # #                       max_p=10, max_q=10, # maximum p and q
@@ -83,11 +76,7 @@ plt.show()
 
 # # print(model.summary())
 
-
-
-
-
-# ################################## ARIMA ######################################
+# ################################## ARIMA ###########################################################
 # model = ARIMA(train, order=(p,d,q))
 model = ARIMA(Train, order=(1, 1, 1))
 fitted = model.fit(disp=0)
@@ -111,7 +100,6 @@ L=plt.legend(loc='best')
 L.get_texts()[0].set_text('Test')
 L.get_texts()[1].set_text('Forecast')
 plt.show()
-
 
 # MSE
 mse_arima_train = mean_squared_error(lnmx_diff[lnmx_diff.index<=split], arima_fittedValues)

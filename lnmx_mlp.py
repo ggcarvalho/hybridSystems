@@ -35,13 +35,6 @@ def gerar_janelas(tam_janela, serie):
 
     return janelas_np
 
-def diferenciar_serie(serie):
-    #serie: obj pandas
-    return serie.diff().dropna()
-
-
-def incrementar_serie(serie_real, serie_diff):
-    return serie_real[0:-1] + serie_diff
 
 def select_lag_acf(serie, max_lag):
     from statsmodels.tsa.stattools import acf
