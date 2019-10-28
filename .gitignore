@@ -13,5 +13,6 @@
 *.log
 *.out
 *.pdf
-*.bib
 *.gz
+*.fdb_latexmk
+*.fls

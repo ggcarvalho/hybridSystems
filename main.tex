@@ -2,6 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[portuguese]{babel}
 \usepackage{hyperref}
+\usepackage{amssymb}
 \usepackage{color}
 \usepackage{float}
 \newcommand{\blue}{\textcolor{blue}}
@@ -29,7 +30,7 @@ O objetivo dessa atividade é implementar e avaliar o desempennho um Sistema Hí
 \maketitle
 
 \section{Introdução -- Sistemas Híbridos}
-No contexto de {\it séries temporais}, doravanete chamaremos de {\it sistema híbrido} uma modelagem para a série temporal da forma 
+No contexto de {\it séries temporais}, doravanete chamaremos de {\it sistema híbrido} uma modelagem para a série temporal da forma
 \begin{equation}\label{hybriddef}
     Z_t = L_t + N_t
 \end{equation}
@@ -37,21 +38,21 @@ na qual $L_t$ representa a componente com modelagem {\it linear}, enquanto $N_t$
 Neste trabalho, usamos o método clássico {\bf ARIMA} para modelar a componente linear $L_t$. A componente não linear, $N_t$, foi modelada a usando Redes Neurais Artificiais, mais especificamente usamos a chamada Multilayer Perceptron (MLP). Para deixar o trabalho mais completo, faremos uma modelagem de $Z_t$ apenas usando {\bf ARIMA}, e outra modelagem apenas usando MLP.
 
 \section{Descrição do Trabalho -- Metodologia}
-A modelagem puramente usando {\bf ARIMA} , ou puramente usando uma MLP já foram trabalhadas. Portanto, aqui iremos descrever o procedimento usado para a previsão da série na modelagem híbrida. Dividiremos a série em treinamento e teste. 
+A modelagem puramente usando {\bf ARIMA} , ou puramente usando uma MLP já foram trabalhadas. Portanto, aqui iremos descrever o procedimento usado para a previsão da série na modelagem híbrida. Dividiremos a série em treinamento e teste.
 \begin{enumerate}
     \item Usaremos uma modelagem {\bf ARIMA} no conjunto de treinamento, calculando o erro da modelagem;
     \item Treinamos a MLP no erro obtido ao modelar a série usando {\bf ARIMA};
-    \item Realizar a previsão do modelo {\bf ARIMA}: $h=20$;
+    \item Realizar a previsão do modelo {\vf ARIMA}: $h=20$;
     \item Realizar a preivsão pela MLP com $20$ saídas.
 \end{enumerate}
 \section{Estudo da Série}
-A série escolhida está no grão anual, e tem duração de 202 anos. 
+A série escolhida está no grão anual, e tem duração de 202 anos.
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.4]{mortalityrate40.png}
     \caption{Série da taxa de mortalidade - logarítmica}
 \end{figure}
-Como iremos aplicar uma janela com 2 lags passados e 19 anos para previsão, dividimos o conjunto de treinamento de $1816$ àc $1990$ e o conjunto de teste como sendo de $1991$ à $2010$. 
+Como iremos aplicar uma janela com 2 lags passados e 19 anos para previsão, dividimos o conjunto de treinamento de $1816$ àc $1990$ e o conjunto de teste como sendo de $1991$ à $2010$.
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.4]{train_test.png}
@@ -105,9 +106,20 @@ Os resultados indicam que a série não é estacionária. Para concluir, vejamos
 
 \section{Modelo MLP}
 
-\section{ARIMA + MLP}
+\section{Modelo Híbrido}
+Usaremos a abordagem de \cite{hybrid}
 
 \section{Resultados}
+\begin{center}
+\begin{tabular}{ |c|c|c|c| }
+\hline
+\  &ARIMA(1,1,1) & MLP & Modelo Híbrido \\
+\hline
+MSE & $\varnothing$ & $\varnothing$ & $\varnothing$ \\
+\hline
+\end{tabular}
+\captionof{table}{Resultado obtido no conjunto de teste ao replicar o experimento}
+\end{center}
 
 \section{Conclusão}
 O modelo ARIMA apresentou um RMSE, para os dados de teste, no valor aproximado de $0.1496$. Contudo, quando implementado o sistema híbrido a partir da soma do modelo ARIMA com o modelo MLP, o RMSE aumentou para o valor aproximado de $0.1572$.
@@ -119,4 +131,6 @@ Sendo assim, o Sistem Híbrido não apresentou melhores previsões do que o ARIM
 \end{itemize}
 Vale a pena investigar se outro modelo de machine learning, por exemplo um SVR, conseguiria mapear de forma mais adequada o erro gerado pelo modelo arima. Ademais, seria interessante implementar outra combinação de sistema híbrido, por meio de técnicas como processos gaussianos etc.
 
+\bibliographystyle{unsrt}
+\bibliography{references}
 \end{document}
