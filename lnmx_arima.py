@@ -36,6 +36,7 @@ plt.title("LNMX Series")
 plt.show()
 
 
+
 split= 1990
 
 Train, Test = lnmx[lnmx.index<=split] ,lnmx[lnmx.index>split] # Train and Test series
@@ -107,8 +108,8 @@ plt.legend(['ARIMA fit', 'Train' ])
 plt.show()
 
 
-plt.plot(Test,label="Test",color="orange")
-plt.plot(fc_series, label='Forecast',color="blue")
+plt.plot(Test,label="Test",color="coral")
+plt.plot(fc_series, label='Forecast',color="darkblue")
 plt.title("ARIMA(1,1,1) -- Test")
 L=plt.legend(loc='best')
 L.get_texts()[0].set_text('Test')
@@ -125,6 +126,7 @@ print("MSE ARIMA Test= ", mse_arima)
 #plot residual errors
 residuals = pd.DataFrame(fitted.resid)
 plt.plot(residuals)
+plt.title("ARIMA(1,1,1) residuals")
 plt.show()
 plot_acf(residuals,color="k",lags=30)
 plt.title("ACF ARIMA(1,1,1) residuals")
@@ -132,6 +134,6 @@ plt.show()
 plot_pacf(residuals,color="k",lags=30)
 plt.title("PACF ARIMA(1,1,1) residuals")
 plt.show()
-residuals.plot(kind='kde')
+residuals.plot(kind='kde',color='k').get_legend().remove()
 plt.show()
-#print(residuals.describe())
+print(residuals.describe())
