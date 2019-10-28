@@ -1,0 +1,122 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage{hyperref}
+\usepackage{color}
+\usepackage{float}
+\newcommand{\blue}{\textcolor{blue}}
+\usepackage{geometry}
+\usepackage{array}
+\geometry{a4paper, margin=2cm}
+\usepackage{subfigure}
+\usepackage{enumitem}
+\usepackage{caption}
+\title{Atividade de Sistemas Híbridos}
+\author{Filipe Duarte e Gabriel G. Carvalho \\ \texttt{\{fcld,ggc5\}@cin.ufpe.br}}
+
+\date{1 de Novembro de 2019}
+
+\usepackage{natbib}
+\usepackage{graphicx}
+
+\begin{document}
+
+\maketitle
+\begin{abstract}
+O objetivo dessa atividade é implementar e avaliar o desempennho um Sistema Híbirdo, conforme Zhang (2003), para realizar previsão do logaritmo da taxa de mortalidade da idade de 40 anos da população francesa.
+
+\end{abstract}
+\maketitle
+
+\section{Introdução -- Sistemas Híbridos}
+No contexto de {\it séries temporais}, doravanete chamaremos de {\it sistema híbrido} uma modelagem para a série temporal da forma 
+\begin{equation}\label{hybriddef}
+    Z_t = L_t + N_t
+\end{equation}
+na qual $L_t$ representa a componente com modelagem {\it linear}, enquanto $N_t$ representa a componente cuja modelagem é não linear.
+Neste trabalho, usamos o método clássico {\bf ARIMA} para modelar a componente linear $L_t$. A componente não linear, $N_t$, foi modelada a usando Redes Neurais Artificiais, mais especificamente usamos a chamada Multilayer Perceptron (MLP). Para deixar o trabalho mais completo, faremos uma modelagem de $Z_t$ apenas usando {\bf ARIMA}, e outra modelagem apenas usando MLP.
+
+\section{Descrição do Trabalho -- Metodologia}
+A modelagem puramente usando {\bf ARIMA} , ou puramente usando uma MLP já foram trabalhadas. Portanto, aqui iremos descrever o procedimento usado para a previsão da série na modelagem híbrida. Dividiremos a série em treinamento e teste. 
+\begin{enumerate}
+    \item Usaremos uma modelagem {\bf ARIMA} no conjunto de treinamento, calculando o erro da modelagem;
+    \item Treinamos a MLP no erro obtido ao modelar a série usando {\bf ARIMA};
+    \item Realizar a previsão do modelo {\bf ARIMA}: $h=20$;
+    \item Realizar a preivsão pela MLP com $20$ saídas.
+\end{enumerate}
+\section{Estudo da Série}
+A série escolhida está no grão anual, e tem duração de 202 anos. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.4]{mortalityrate40.png}
+    \caption{Série da taxa de mortalidade - logarítmica}
+\end{figure}
+Como iremos aplicar uma janela com 2 lags passados e 19 anos para previsão, dividimos o conjunto de treinamento de $1816$ àc $1990$ e o conjunto de teste como sendo de $1991$ à $2010$. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.4]{train_test.png}
+    \caption{Divisão dos conjuntos de treinamento e teste}
+\end{figure}
+\subsection{Estatística descritiva}
+Para o conjunto de treinamento temos:
+\begin{enumerate}
+    \item Amostras: $175$
+    \item Média: $-4.896133$
+    \item Desvio padrão: $0.619546$
+    \item Valor mínimo: $-6.207136$
+    \item Valor máximo: $-3.895854$
+    \item $(25\%,50\%,75\%) = (-5.475952,-4.577069,-4.481008)$
+\end{enumerate}
+Para o conjunto de teste temos:
+\begin{enumerate}
+    \item Amostras: $20$
+    \item Média: $-6.366835$
+    \item Desvio padrão: $0.178995$
+    \item Valor mínimo: $-6.687817$
+    \item Valor máximo: $-6.123854$
+    \item $(25\%,50\%,75\%) = (-6.506776,-6.355612,-6.183168)$
+\end{enumerate}
+Além dos dados estatísticos acima, para o conjunto de treinamento temos:
+\begin{enumerate}
+    \item ADF Statistic: $0.180194$
+    \item p-value: $0.971129$
+    \item Desvio padrão: $0.619546$
+    \item Valores críticos:
+    \begin{itemize}
+        \item $1\%$: $-3.469$
+        \item $5\%$: $-2.879$
+        \item $10\%$: $-2.576$
+    \end{itemize}
+\end{enumerate}
+Os resultados indicam que a série não é estacionária. Para concluir, vejamos os gráficos ACF e PACF do conjunto de treinamento:
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.4]{acf.png}
+    \caption{Autocorrelação}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.4]{pacf.png}
+    \caption{Autocorrelação Parcial}
+\end{figure}
+
+
+\section{Modelo ARIMA}
+
+\section{Modelo MLP}
+
+\section{ARIMA + MLP}
+
+\section{Resultados}
+
+\section{Conclusão}
+O modelo ARIMA apresentou um RMSE, para os dados de teste, no valor aproximado de $0.1496$. Contudo, quando implementado o sistema híbrido a partir da soma do modelo ARIMA com o modelo MLP, o RMSE aumentou para o valor aproximado de $0.1572$.
+
+Sendo assim, o Sistem Híbrido não apresentou melhores previsões do que o ARIMA. Duas possíveis justificativas podem explicar esse fato:
+\begin{itemize}
+    \item O erro de treinamento do ARIMA, que serviu para treinar o modelo MLP, seria uma série não autocorrelacionada.
+    \item O Tamanho da janela de previsão ser de longo prazo.
+\end{itemize}
+Vale a pena investigar se outro modelo de machine learning, por exemplo um SVR, conseguiria mapear de forma mais adequada o erro gerado pelo modelo arima. Ademais, seria interessante implementar outra combinação de sistema híbrido, por meio de técnicas como processos gaussianos etc.
+
+\end{document}

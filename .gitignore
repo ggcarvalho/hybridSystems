@@ -1,6 +1,17 @@
-#ignore pictures
+#Pictures
 *.png
 *.jpg
 
-#Ignore IPythonNotebook checkpoints
+#Jupyter Notebook
 *.ipynb_checkpoints
+
+# Compressed
+*.zip
+
+# Latex
+*.aux
+*.log
+*.out
+*.pdf
+*.bib
+*.gz
