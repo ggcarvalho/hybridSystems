@@ -16,8 +16,6 @@ dados = lnmx["40"]
 
 plt.plot(dados)
 plt.show()
-
-
 ###################### FUNCTIONS #################################################################################
 
 def normalizar_serie(serie):

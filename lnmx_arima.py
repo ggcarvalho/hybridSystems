@@ -11,20 +11,11 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
-from statsmodels.tsa.api import SimpleExpSmoothing, Holt, ExponentialSmoothing
 from statsmodels.tsa.arima_model import ARIMA
-from statsmodels.tsa.arima_model import ARMA
-from statsmodels.tsa.arima_process import ArmaProcess
-from statsmodels.tsa.holtwinters import ExponentialSmoothing
 from sklearn.metrics import mean_squared_error
 import pmdarima as pm
-from pykalman import KalmanFilter
-from statsmodels.tsa.ar_model import AR
 import seaborn as sns
-import rpy2.robjects.numpy2ri
-from rpy2.robjects.packages import importr
-from statsmodels.tsa.arima_process import ArmaProcess
-from arch import arch_model
+sns.set()
 ######################### FUNCTIONS ###########################################
 def returns(serie):
 	returns = []
@@ -33,18 +24,14 @@ def returns(serie):
 		returns.append(serie[i+1] - serie[i])
 	return pd.DataFrame(returns,columns=None)
 ##########################  PLOTS  ############################################
-sns.set()
+lnmx = pd.read_csv("lnmx_series.csv")
 
-
-
-lnmx = pd.read_csv("lnmx_series.csv") # Using the closing price of
-								  # the monthly time series.
 lnmx = lnmx["40"]
-# plt.plot(lnmx,linewidth=1,color="k")
-# plt.xlabel("Time (Years)")
-# plt.ylabel("Mortality Rate")
-# plt.title("LNMX Series")
-# plt.show()
+plt.plot(lnmx,linewidth=1,color="k")
+plt.xlabel("Time (Years)")
+plt.ylabel("Mortality Rate")
+plt.title("LNMX Series")
+plt.show()
 
 
 
