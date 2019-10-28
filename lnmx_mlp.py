@@ -11,36 +11,12 @@ import seaborn as sns
 sns.set()
 rcParams['figure.figsize'] =15, 6
 
-############################# PLOTING ###############################################################
+############################################################################################
 
 lnmx = pd.read_csv("lnmx_series.csv",index_col="Year")
 lnmx = lnmx["40"]
 dados = lnmx[lnmx.index<2011]
-
-plt.plot(dados)
-plt.show()
-###################### FUNCTIONS ###################################################################
-
-def normalizar_serie(serie):
-    minimo = min(serie)
-    maximo = max(serie)
-    y = (serie - minimo) / (maximo - minimo)
-    return y
-
-def desnormalizar(serie_atual, serie_real):
-    minimo = min(serie_real)
-    maximo = max(serie_real)
-
-    serie = (serie_atual * (maximo - minimo)) + minimo
-
-    return pd.DataFrame(serie)
-
-
-serie = dados.values
-serie_normalizada = normalizar_serie(serie)
-###################### NORMALIZED PLOT #############################################################
-plt.plot(serie_normalizada)
-plt.show()
+serie = dados
 
 def gerar_janelas(tam_janela, serie):
     # serie: vetor do tipo numpy ou lista
@@ -59,11 +35,6 @@ def gerar_janelas(tam_janela, serie):
 
     return janelas_np
 
-
-# qtd_lags = 20
-# janelas = gerar_janelas(5, serie_normalizada)
-# print(janelas.shape)
-
 def diferenciar_serie(serie):
     #serie: obj pandas
     return serie.diff().dropna()
@@ -71,16 +42,6 @@ def diferenciar_serie(serie):
 
 def incrementar_serie(serie_real, serie_diff):
     return serie_real[0:-1] + serie_diff
-
-serie_diff = diferenciar_serie(dados)
-
-plt.plot(serie_diff)
-plt.show()
-
-serie_rt = incrementar_serie(dados.values, serie_diff.values)
-plt.plot(serie_rt)
-plt.show()
-
 
 def select_lag_acf(serie, max_lag):
     from statsmodels.tsa.stattools import acf
@@ -116,13 +77,6 @@ def select_lag_acf(serie, max_lag):
     #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     return lags_selecionados
-
-sm.graphics.tsa.plot_acf(serie_normalizada, lags=30)
-plt.show()
-
-lag_sel = select_lag_acf(serie_normalizada, 20)
-print(lag_sel)
-
 
 def split_serie_with_lags(serie, perc_train, perc_val = 0):
 
@@ -164,9 +118,9 @@ def split_serie_with_lags(serie, perc_train, perc_val = 0):
 
         return x_train, y_train, x_test, y_test
 tam_janela = 2
-serie_janelas = gerar_janelas(tam_janela, serie_normalizada)
+serie_janelas = gerar_janelas(tam_janela, serie)
 x_train, y_train, x_test, y_test, x_val, y_val = split_serie_with_lags(serie_janelas, 0.6,
- perc_val = 0.2)
+ perc_val = 0.29)
 
 def treinar_mlp(x_train, y_train, x_val, y_val,num_exec):
 
@@ -209,9 +163,6 @@ def treinar_mlp(x_train, y_train, x_val, y_val,num_exec):
 
     return select_model, qtd_lags_sel
 
-
-
-
 modelo, lag_sel = treinar_mlp(x_train, y_train, x_val, y_val,10)
 
 predict_train = modelo.predict(x_train[:, -lag_sel:])
@@ -221,17 +172,15 @@ predict_test = modelo.predict(x_test[:, -lag_sel:])
 previsoes_train = np.hstack(( predict_train, predict_val))
 target_train = np.hstack((y_train, y_val))
 
-plt.plot(previsoes_train, label = 'Prev Tr + val')
-plt.plot(target_train, label='Target')
+plt.plot(previsoes_train, label = 'Forecast: Train + Validation')
+plt.plot(target_train, label='Train + Validation')
 plt.legend(loc='best')
 plt.show()
 
-
-plt.plot(predict_test, label = 'Prev Test')
-plt.plot(y_test, label='Target')
+plt.plot(predict_test, label = 'Forecast Test')
+plt.plot(y_test, label='Test')
 plt.legend(loc='best')
 plt.show()
-
 
 print("MSE treinamento = %s" %MSE(previsoes_train,target_train))
 print("MSE Teste = %s" %MSE(y_test, predict_test))
