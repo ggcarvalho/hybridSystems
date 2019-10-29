@@ -1,0 +1,10 @@
+
+
+To Do :
+
+- ARIMA (Done)
+
+- MLP -- Using test set
+- MLP -- without using  test set
+
+- Hybrid system : To discuss!
