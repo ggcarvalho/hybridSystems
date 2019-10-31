@@ -8,7 +8,6 @@ from statsmodels.tsa.arima_model import ARIMA
 from sklearn.metrics import mean_squared_error
 import pmdarima as pm
 from matplotlib.pylab import rcParams
-rcParams['figure.figsize'] =15, 6
 import seaborn as sns
 sns.set()
 ##########################  PLOTS  ############################################
@@ -102,10 +101,10 @@ L.get_texts()[1].set_text('Forecast')
 plt.show()
 
 # MSE
-mse_arima_train = mean_squared_error(lnmx_diff[lnmx_diff.index<=split], arima_fittedValues)
-print("MSE ARIMA Train (diff. serie)= ", mse_arima_train)
-mse_arima = mean_squared_error(Test, fc_series)
-print("MSE ARIMA Test= ", mse_arima)
+rmse_arima_train = np.sqrt(mean_squared_error(lnmx_diff[lnmx_diff.index<=split], arima_fittedValues))
+print("RMSE ARIMA Train (diff. serie)= ", rmse_arima_train)
+rmse_arima = np.sqrt(mean_squared_error(Test, fc_series))
+print("RMSE ARIMA Test= ", rmse_arima)
 #print(fitted.summary())
 #plot residual errors
 residuals = pd.DataFrame(fitted.resid)
