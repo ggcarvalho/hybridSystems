@@ -9,6 +9,8 @@ from sklearn.metrics import mean_squared_error
 from sklearn.neural_network import MLPRegressor
 from sklearn.metrics import mean_squared_error as MSE
 from pmdarima import auto_arima
+import seaborn as sns
+sns.set()
 
 def gerar_janelas(tam_janela, serie):
     # serie: vetor do tipo numpy ou lista
@@ -196,9 +198,9 @@ print('Quantidade de lags: ', lag_sel)
 predict_test = mlp_model.predict(x_test[:, -lag_sel:])
 
 # gráfico da previsão
-plt.plot(y_test, label = 'Serie - y_test')
-plt.plot(predict_test, label = 'MLP - x_test')
-plt.legend(loc='best')
+plt.plot(y_test, label = 'Resíduos do ARIMA\n de treinamento')
+plt.plot(predict_test, label = 'Previsão com MLP\n dos Resíduos do Arima\n de treinamento')
+plt.legend(loc='best',fontsize="x-small")
 plt.show()
 
 # Previsao com o Arima
@@ -220,19 +222,9 @@ previsao_mlp = pd.Series(previsao_mlp, index = teste.iloc[:-lag_sel].index)
 z = previsao_arima + previsao_mlp
 
 # plotando
-teste.plot(label = 'Série')
+teste.loc[:2010].plot(label = 'Série')
 previsao_arima.plot(label = 'ARIMA')
 z.plot(label = 'Z = ARIMA + MLP')
-plt.legend()
-plt.show()
-
-# Criando o sistema híbrido
-z = previsao_arima + previsao_mlp
-
-# plotando
-teste.plot(label = 'Série')
-previsao_arima.plot(label = 'ARIMA')
-z.plot(label = 'z = ARIMA + MLP')
 plt.legend()
 plt.show()
 
