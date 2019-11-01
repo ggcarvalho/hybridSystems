@@ -5,12 +5,9 @@ import matplotlib.pyplot as plt
 from sklearn.neural_network import MLPRegressor
 from sklearn.metrics import mean_squared_error as MSE
 import statsmodels.api as sm
-from matplotlib.pylab import rcParams
 import pandas as pd
 import seaborn as sns
 sns.set()
-rcParams['figure.figsize'] =15, 6
-
 #####################################################################################################
 
 lnmx = pd.read_csv("lnmx_series.csv",index_col="Year")
@@ -177,7 +174,7 @@ plt.plot(y_test, label='Test')
 plt.legend(loc='best')
 plt.show()
 
-print("MSE treinamento = %s" %MSE(previsoes_train,target_train))
-print("MSE Teste = %s" %MSE(y_test, predict_test))
+print("RMSE treinamento = %s" %np.sqrt(MSE(previsoes_train,target_train)))
+print("RMSE Teste = %s" %np.sqrt(MSE(y_test, predict_test)))
 print(modelo)
 print(len(predict_test))

@@ -7,7 +7,6 @@ from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 from statsmodels.tsa.arima_model import ARIMA
 from sklearn.metrics import mean_squared_error
 import pmdarima as pm
-from matplotlib.pylab import rcParams
 import seaborn as sns
 sns.set()
 ##########################  PLOTS  ############################################
