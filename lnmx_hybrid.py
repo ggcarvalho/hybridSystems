@@ -186,7 +186,7 @@ def split_serie_with_lags(serie, perc_train, perc_val = 0):
 
         return x_train, y_train, x_test, y_test
 
-x_train, y_train, x_val, y_val, x_test, y_test = split_serie_with_lags(janelas, perc_train = 0.5897, perc_val = 0.3077)
+x_train, y_train, x_test, y_test, x_val, y_val = split_serie_with_lags(janelas, perc_train = 0.5897, perc_val = 0.3077)
 
 # treinar MLP
 mlp_model, lag_sel = treinar_mlp(x_train, y_train, x_val, y_val, num_exec = 10)
