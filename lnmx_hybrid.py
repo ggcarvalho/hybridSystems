@@ -11,7 +11,7 @@ from sklearn.metrics import mean_squared_error as MSE
 from pmdarima import auto_arima
 import seaborn as sns
 sns.set()
-
+np.random.seed(1)
 def gerar_janelas(tam_janela, serie):
     # serie: vetor do tipo numpy ou lista
     tam_serie = len(serie)
